@@ -1,0 +1,5 @@
+{
+  "seed": 0,
+  "outputs_dir": "outputs",
+  "notes": "Synthetic simulator for governance stress testing. See appendix_equations.tex for model."
+}

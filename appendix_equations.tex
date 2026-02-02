@@ -1,0 +1,111 @@
+\section{Appendix A: Stochastic loss model and reporting regimes}
+
+This appendix states the full simulator specification used for the stress tests in Section 7.
+
+\subsection{Organization variables}
+For organization $i \in \{1,\ldots,N\}$, exposure and control are
+
+$$
+
+e_i \sim \mathrm{LogNormal}(\mu_e,\sigma_e), \qquad c_i \sim \mathcal{N}(0,1),
+
+$$
+and an organization random effect may be included
+
+$$
+
+u_i \sim \mathcal{N}(0,\sigma_u).
+
+$$
+
+\subsection{Incident frequency}
+Annual incident count is
+
+$$
+
+K_i \sim \mathrm{Poisson}(\lambda_i), \qquad \log \lambda_i = \alpha + \beta_e \log e_i + \beta_c c_i + u_i.
+
+$$
+
+\subsection{Systemic shock correlation}
+A systemic shock indicator is drawn each year:
+
+$$
+
+Z \sim \mathrm{Bernoulli}(p).
+
+$$
+In shock years, frequency increases by $\delta$:
+
+$$
+
+\log \lambda_i \leftarrow \log \lambda_i + Z\delta.
+
+$$
+
+\subsection{Severity}
+Each incident has heavy tailed severity:
+
+$$
+
+S_{ij} \sim \mathrm{Pareto}(s_{\min}, \xi + Z \Delta_{\xi}).
+
+$$
+Total annual loss is
+
+$$
+
+L_i = \sum_{j=1}^{K_i} S_{ij}.
+
+$$
+
+\subsection{Reporting and selection}
+Visibility of an incident is
+
+$$
+
+R_{ij} \sim \mathrm{Bernoulli}(\pi_{ij}),
+\qquad
+\pi_{ij} = \sigma(\gamma_0 + \gamma_s \log S_{ij} + \gamma_c c_i),
+
+$$
+where $\sigma(\cdot)$ is the logistic sigmoid. Reporting regimes modify the effective intercept to model public only versus confidential reporting.
+
+\subsection{Systemic facility backstop}
+When the systemic facility pays share $b$ of losses in shock years, net loss becomes
+
+$$
+
+L_i^{\mathrm{net}} =
+\begin{cases}
+(1-b)L_i & \text{if } Z=1,\\
+L_i & \text{if } Z=0.
+\end{cases}
+
+$$
+
+\subsection{Capital load proxy multiple}
+Let $q$ be a high percentile. Define conditional value at risk:
+
+$$
+
+\mathrm{CVaR}_q(L_i) = \mathbb{E}[L_i \mid L_i \ge \mathrm{VaR}_q(L_i)].
+
+$$
+Define the capital load proxy multiple:
+
+$$
+
+M_i = \frac{\mathrm{CVaR}_q(L_i)}{\mathbb{E}[L_i]}.
+
+$$
+
+\subsection{Exclusion boundary}
+Given threshold $T$, insurance collapse into exclusions is operationalized as
+
+$$
+
+M_i > T.
+
+$$
+The exclusion rate is the fraction of organizations with $M_i > T$.
